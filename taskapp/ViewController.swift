@@ -34,13 +34,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidLoad()
 
         //デリゲート先を自分に設定する。
-        SearchBar.delegate = self
+        SearchBar.delegate = self as! UISearchBarDelegate
 
         //何も入力されていなくてもReturnキーを押せるようにする。
         SearchBar.enablesReturnKeyAutomatically = false
 
         //検索結果配列にデータをコピーする。
-        searchResult = realm.objects("Task".self)
+        taskArray = realm.objects(Task.self)
     }
 
 
@@ -49,7 +49,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 func tableView(tableView:UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) -> UITableViewCell{
 
         //セルを取得する。
-        let cell = tableView.dequeueReusableCellWithIdentifier("TestCell", forIndexPath:indexPath) as UITableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TestCell", for:indexPath as IndexPath) as UITableViewCell
 
         cell.textLabel?.text = searchResult[indexPath.row]
         return cell
@@ -71,13 +71,13 @@ func tableView(tableView:UITableView, cellForRowAtIndexPath indexPath:NSIndexPat
 
         if(SearchBar.text == "") {
 //検索文字列が空の場合はすべてを表示する。
-            searchResult = realm.objects(Task)
+            taskArray = realm.objects(Task.self)
         } else {
             
             //検索文字列を含むデータを検索結果配列に追加する。
             for data in realm.objects(Task.self) {
                 if data.containsString(SearchBar.text!) {
-                    searchResult.append(data)
+                    taskArray.append(data)
                 }
             }
         }
