@@ -16,6 +16,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var SearchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     
+    let realm = try! Realm()
+    var taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: false)
+
+    
     //データ
     //let docs = realm.objects("Task".self)
     
@@ -26,78 +30,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     let predicate = NSPredicate(format: "color = %@ AND name BEGINSWITH %@", "tan", "String")
 //    tanTask = realm.objects(Task).filter(predicate)
     
-  //検索結果配列
-    var searchResult = [String]()
 
-//最初からあるメソッド
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        //デリゲート先を自分に設定する。
-        SearchBar.delegate = self as! UISearchBarDelegate
-
-        //何も入力されていなくてもReturnキーを押せるようにする。
-        SearchBar.enablesReturnKeyAutomatically = false
-
-        //検索結果配列にデータをコピーする。
-        taskArray = realm.objects(Task.self)
-    }
-
-
-
-    //データを返すメソッド
-func tableView(tableView:UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) -> UITableViewCell{
-
-        //セルを取得する。
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TestCell", for:indexPath as IndexPath) as UITableViewCell
-
-        cell.textLabel?.text = searchResult[indexPath.row]
-        return cell
-    }
-
-
-    //データの個数を返すメソッド
-    func tableView(tableView:UITableView, numberOfRowsInSection section:Int) -> Int {
-        return searchResult.count
-    }
-
-
-    //検索ボタン押下時の呼び出しメソッド
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        SearchBar.endEditing(true)
-
-        //検索結果配列を空にする。
-        searchResult.removeAll()
-
-        if(SearchBar.text == "") {
-//検索文字列が空の場合はすべてを表示する。
-            taskArray = realm.objects(Task.self)
-        } else {
-            
-            //検索文字列を含むデータを検索結果配列に追加する。
-            for data in realm.objects(Task.self) {
-                if data.containsString(SearchBar.text!) {
-                    taskArray.append(data)
-                }
-            }
-        }
-
-        //テーブルを再読み込みする。
-        testTableView.reloadData()
-    }
-    
-
-  
-    let realm = try! Realm()
-    var taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: false)
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
