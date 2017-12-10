@@ -28,6 +28,20 @@ class InputViewController: UIViewController {
     var task: Task!
     let realm = try! Realm()
     
+    //データ
+    //let docs = realm.objects("Task".self)
+    
+    // 文字列で検索条件を指定します
+    //    var tanTask = realm.objects(Task).filter("color = 'tan' AND name BEGINSWITH ‘String’”)
+    
+    // NSPredicateを使って検索条件を指定します
+    let predicate = NSPredicate(format: "color = %@ AND name BEGINSWITH %@", "tan", "String")
+    //    tanTask = realm.objects(Task).filter(predicate)
+    
+    //検索結果配列
+    var taskArray = try! Realm().objects(Task.self)
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
